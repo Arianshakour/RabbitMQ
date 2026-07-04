@@ -14,6 +14,7 @@ builder.Services.Configure<RabbitMqOptions>(
     builder.Configuration.GetSection("RabbitMq"));
 
 builder.Services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();//چون کانکشن هست یدونه کافیه
+builder.Services.AddSingleton<IRabbitMqTopology, RabbitMqTopology>();
 
 builder.Services.AddScoped<IRabbitProducer, RabbitProducer>();
 builder.Services.AddScoped<IUserService, UserService>();

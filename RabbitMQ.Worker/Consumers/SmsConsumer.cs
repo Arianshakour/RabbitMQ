@@ -14,10 +14,12 @@ namespace RabbitMQ.Worker.Consumers
     public class SmsConsumer 
     {
         private readonly IRabbitMqConnection _connection;
+        private readonly IRabbitMqTopology _topology;
 
-        public SmsConsumer(IRabbitMqConnection connection)
+        public SmsConsumer(IRabbitMqConnection connection, IRabbitMqTopology topology)
         {
             _connection = connection;
+            _topology = topology;
         }
 
         public async Task ConsumeAsync(CancellationToken stoppingToken)
@@ -31,24 +33,11 @@ namespace RabbitMQ.Worker.Consumers
                 await connection.CreateChannelAsync();
 
 
-            //ساخت Exchange
-            await channel.ExchangeDeclareAsync(
+            //برای تمیزی بردیم در یک کلاس کمکی
+            await _topology.ConfigureAsync(
+                channel,
                 exchange: "notification-exchange",
-                type: ExchangeType.Direct,
-                durable: true);
-
-
-            //ساخت Queue
-            await channel.QueueDeclareAsync(
                 queue: "sms-queue",
-                durable: true,
-                exclusive: false,
-                autoDelete: false);
-
-            //Bind
-            await channel.QueueBindAsync(
-                queue: "sms-queue",
-                exchange: "notification-exchange",
                 routingKey: "sms");
 
 

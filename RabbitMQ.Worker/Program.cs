@@ -10,6 +10,7 @@ builder.Services.Configure<RabbitMqOptions>(
     builder.Configuration.GetSection("RabbitMq"));
 
 builder.Services.AddSingleton<IRabbitMqConnection, RabbitMqConnection>();
+builder.Services.AddSingleton<IRabbitMqTopology, RabbitMqTopology>();
 
 builder.Services.AddSingleton<SmsConsumer>();
 

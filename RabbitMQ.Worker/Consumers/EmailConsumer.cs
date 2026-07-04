@@ -14,10 +14,13 @@ namespace RabbitMQ.Worker.Consumers
     public class EmailConsumer 
     {
         private readonly IRabbitMqConnection _connection;
+        private readonly IRabbitMqTopology _topology;
 
-        public EmailConsumer(IRabbitMqConnection connection)
+
+        public EmailConsumer(IRabbitMqConnection connection, IRabbitMqTopology topology)
         {
             _connection = connection;
+            _topology = topology;
         }
 
         public async Task ConsumeAsync(CancellationToken stoppingToken)
@@ -31,25 +34,12 @@ namespace RabbitMQ.Worker.Consumers
                 await connection.CreateChannelAsync();
 
 
-            //ساخت Exchange
-            await channel.ExchangeDeclareAsync(
+            //برای تمیزی بردیم در یک کلاس کمکی
+            await _topology.ConfigureAsync(
+                channel,
                 exchange: "notification-exchange",
-                type: ExchangeType.Direct,
-                durable: true);
-
-
-            //ساخت Queue
-            await channel.QueueDeclareAsync(
-                queue: "email-queue",
-                durable: true,
-                exclusive: false,
-                autoDelete: false);
-
-            //Bind
-            await channel.QueueBindAsync(
-                queue: "email-queue",
-                exchange: "notification-exchange",
-                routingKey: "email");
+                queue: "sms-queue",
+                routingKey: "sms");
 
 
             Console.WriteLine("Email Consumer Started...");
