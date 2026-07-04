@@ -1,0 +1,43 @@
+﻿@using RabbitMQ.Application.ViewModels
+@model RegisterVm
+
+
+@{
+    ViewData["Title"] = "ثبت نام";
+}
+<h1>@ViewData["Title"]</h1>
+
+
+<form asp-action="Register" method="post">
+
+    <div>
+        <label>نام</label>
+        <input asp-for="FullName" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>موبایل</label>
+        <input asp-for="Mobile" />
+    </div>
+
+    <br />
+
+    <div>
+        <label>ایمیل</label>
+        <input asp-for="Email" />
+    </div>
+
+    <br />
+
+    <button class="btn btn-success" type="submit">
+        ثبت
+    </button>
+
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <h3>@ViewBag.Message</h3>
+}
